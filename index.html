@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>عبارة عشوائية</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+      background: #f5f5f5;
+    }
+    img {
+      max-width: 90%;
+      margin-top: 50px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>✨ عبارة اليوم</h2>
+<img id="quoteImage" src="">
+
+<script>
+  const images = [
+    "images/1.jpg",
+    "images/2.jpg",
+    "images/3.jpg",
+    "images/4.jpg",
+    "images/5.jpg"
+  ];
+
+  function getRandomIndex(excludeIndex) {
+    let index;
+    do {
+      index = Math.floor(Math.random() * images.length);
+    } while (index == excludeIndex && images.length > 1);
+
+    return index;
+  }
+
+  let lastIndex = localStorage.getItem("lastQuoteIndex");
+
+  let newIndex = getRandomIndex(lastIndex);
+
+  document.getElementById("quoteImage").src = images[newIndex];
+
+  localStorage.setItem("lastQuoteIndex", newIndex);
+</script>
+
+</body>
+</html>
