@@ -1,80 +1,115 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>عبارة اليوم</title>
+<meta charset="UTF-8">
+<title>عبارة اليوم</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #f3f1ea;
-      text-align: center;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f3f1ea;
+  text-align: center;
+}
 
-    .container {
-      padding: 40px;
-    }
+img {
+  max-width: 90%;
+  margin-top: 80px;
+  border-radius: 15px;
+  display: none;
+}
 
-    img {
-      max-width: 90%;
-      border-radius: 15px;
-      margin-top: 30px;
-    }
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    textarea {
-      width: 80%;
-      height: 100px;
-      margin-top: 40px;
-      border-radius: 10px;
-      border: none;
-      padding: 15px;
-      font-size: 16px;
-    }
+.start-btn {
+  padding: 15px 30px;
+  font-size: 18px;
+  background: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-    button {
-      margin-top: 15px;
-      padding: 10px 25px;
-      border: none;
-      background: black;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-  </style>
+#timer {
+  margin-top: 20px;
+  font-size: 18px;
+}
+</style>
+
 </head>
 
 <body>
 
-<div class="container">
+<h2>✨ عبارة اليوم</h2>
+<div id="timer"></div>
 
-  <h2>✨ عبارة اليوم</h2>
+<img id="quoteImage">
 
-  <img id="quoteImage" src="images/1.jpg">
-
-  <h3>شارك عبارتك</h3>
-
-  <form id="form">
-    <textarea name="message" placeholder="اكتب عبارتك هنا"></textarea><br>
-    <button type="submit">إرسال</button>
-  </form>
-
+<div class="overlay" id="overlay">
+  <button class="start-btn" onclick="showQuote()">اضغط لتشاهد العبارة</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
 <script>
-  emailjs.init("Z9NEFzkoGugN_ewC8");
 
-  document.getElementById("form").addEventListener("submit", function(e) {
-    e.preventDefault();
+// 📁 حط أسماء الصور هون
+const images = [
+  "WhatsApp Image 2026-04-23 at 23.32.56 (1).jpeg",
+  "WhatsApp Image 2026-04-23 at 23.32.56 (2).jpeg",
+  "WhatsApp Image 2026-04-23 at 23.32.57 (16).jpeg"
+];
 
-    emailjs.send("service_92yc47f", "template_mvy98sn", {
-      message: this.message.value
-    }).then(() => {
-      alert("تم إرسال عبارتك ✅");
-    });
-  });
+// اختيار عشوائي بدون تكرار مباشر
+function getRandomImage() {
+  let lastIndex = localStorage.getItem("lastIndex");
+  let index;
+
+  do {
+    index = Math.floor(Math.random() * images.length);
+  } while (index == lastIndex && images.length > 1);
+
+  localStorage.setItem("lastIndex", index);
+  return images[index];
+}
+
+// عرض الصورة
+function showQuote() {
+  const img = document.getElementById("quoteImage");
+
+  img.src = getRandomImage();
+
+  document.getElementById("overlay").style.display = "none";
+  img.style.display = "block";
+}
+
+// عداد 24 ساعة
+function updateTimer() {
+  const now = new Date();
+  const tomorrow = new Date();
+
+  tomorrow.setHours(24,0,0,0);
+
+  const diff = tomorrow - now;
+
+  const hours = Math.floor(diff / (1000*60*60));
+  const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+
+  document.getElementById("timer").innerText =
+    "⏳ باقي للعبارة القادمة: " + hours + " ساعة و " + minutes + " دقيقة";
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
 </script>
 
 </body>
