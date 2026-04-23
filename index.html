@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>عبارة اليوم</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
@@ -40,9 +40,8 @@ body {
   z-index: 10;
 }
 
-/* زر البداية */
 .start-btn {
-  padding: 18px 50px;
+  padding: 18px 40px;
   font-size: 18px;
   font-family: 'Tajawal', sans-serif;
   border-radius: 20px;
@@ -55,10 +54,7 @@ body {
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-.start-btn:hover {
-  transform: scale(1.05);
-  background: rgba(255,255,255,0.25);
-}
+.start-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
 
 /* المحتوى الرئيسي */
 .container {
@@ -69,6 +65,22 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px 10px;
+  box-sizing: border-box;
+}
+
+/* العداد */
+#timer {
+  margin-bottom: 15px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
 }
 
 /* الكرت */
@@ -76,39 +88,33 @@ body {
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(15px);
   border-radius: 25px;
-  padding: 20px;
-  width: 90%;
-  max-width: 350px;
+  padding: 15px;
+  width: 100%;
+  max-width: 340px;
   text-align: center;
   opacity: 0;
   transform: scale(0.9);
   transition: 0.6s;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-sizing: border-box;
 }
 
 .card img {
   width: 100%;
-  max-height: 55vh;
+  max-height: 48vh;
   object-fit: contain;
   border-radius: 15px;
   margin-bottom: 15px;
 }
 
-/* العداد */
-#timer {
-  margin-bottom: 20px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 12px 25px;
-  border-radius: 20px;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
+/* أزرار التفاعل */
+.actions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* أزرار التفاعل */
-.actions {
+.actions-row {
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -116,25 +122,21 @@ body {
 
 .action-btn {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   border-radius: 15px;
   border: none;
   font-family: 'Tajawal', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.download-btn {
-  background: rgba(255, 255, 255, 0.9);
-  color: black;
-}
-
+.download-btn { background: rgba(255, 255, 255, 0.9); color: black; }
 .download-btn:hover { background: white; }
 
 .like-btn {
@@ -149,17 +151,28 @@ body {
   border-color: rgba(255, 59, 48, 0.5);
 }
 
-.show {
-  opacity: 1;
-  transform: scale(1);
+.suggest-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px dashed rgba(255,255,255,0.4);
+  width: 100%;
 }
 
-/* ---------------- نافذة الحسابات المنبثقة ---------------- */
+.notify-btn {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  width: 100%;
+}
+
+.show { opacity: 1; transform: scale(1); }
+
+/* ---------------- النوافذ المنبثقة ---------------- */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.8);
-  display: none; /* مخفية بالبداية */
+  display: none;
   justify-content: center; align-items: center;
   z-index: 20;
   backdrop-filter: blur(8px);
@@ -170,7 +183,7 @@ body {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 25px;
-  padding: 30px;
+  padding: 25px;
   width: 85%;
   max-width: 320px;
   text-align: center;
@@ -179,12 +192,10 @@ body {
   opacity: 0;
   transition: 0.4s;
   position: relative;
+  box-sizing: border-box;
 }
 
-.modal-content.show-modal {
-  transform: scale(1);
-  opacity: 1;
-}
+.modal-content.show-modal { transform: scale(1); opacity: 1; }
 
 .close-modal {
   position: absolute;
@@ -197,41 +208,44 @@ body {
   display: flex; justify-content: center; align-items: center;
 }
 
-.modal-content h3 { margin: 0 0 10px 0; font-size: 20px; }
-.modal-content p { margin: 0 0 20px 0; font-size: 15px; color: #ccc; }
+.modal-content h3 { margin: 0 0 10px 0; font-size: 18px; }
+.modal-content p { margin: 0 0 15px 0; font-size: 14px; color: #ccc; line-height: 1.5; }
 
-.social-links { display: flex; flex-direction: column; gap: 12px; }
-
+/* أزرار حسابات التواصل */
+.social-links { display: flex; flex-direction: column; gap: 10px; }
 .social-btn {
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 12px;
-  border-radius: 15px;
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  font-family: 'Tajawal', sans-serif;
-  transition: 0.3s;
+  padding: 12px; border-radius: 15px; text-decoration: none; color: white; font-weight: bold; font-family: 'Tajawal', sans-serif;
 }
+.insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.tiktok { background: #000; border: 1px solid rgba(255,255,255,0.3); }
+.social-btn svg { width: 20px; height: 20px; fill: white; }
 
-.social-btn:hover { transform: scale(1.05); }
-
-/* ألوان انستقرام */
-.insta {
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-/* ألوان تيك توك */
-.tiktok {
-  background: #000;
+/* الإدخال (النماذج) */
+.custom-input {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  border-radius: 15px;
+  padding: 12px 15px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  outline: none;
+  text-align: right;
 }
+textarea.custom-input { height: 90px; resize: none; }
+.custom-input:focus { border-color: white; }
 
-.social-btn svg { width: 22px; height: 22px; fill: white; }
-
+.submit-btn {
+  background: white; color: black; border: none; padding: 12px 20px;
+  border-radius: 15px; font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: bold;
+  cursor: pointer; width: 100%;
+}
 </style>
-
 </head>
-
 <body>
 
 <div id="bg"></div>
@@ -246,51 +260,65 @@ body {
   <div class="card" id="card">
     <img id="quoteImage" src="">
     
-    <div class="actions">
-      <button class="action-btn like-btn" id="likeBtn" onclick="toggleLike()">
-        <span id="likeIcon">🤍</span> إعجاب
+    <div class="actions-container">
+      <div class="actions-row">
+        <button class="action-btn like-btn" id="likeBtn" onclick="toggleLike()">
+          <span id="likeIcon">🤍</span> إعجاب 
+        </button>
+        <button class="action-btn download-btn" onclick="downloadImage()">
+          ⬇️ حفظ 
+        </button>
+      </div>
+      <button class="action-btn suggest-btn" onclick="showModal('suggestModal', 'suggestContent')">
+        ✍️ اقترح عبارة للموقع
       </button>
-      <button class="action-btn download-btn" onclick="downloadImage()">
-        ⬇️ حفظ 
+      <button class="action-btn notify-btn" onclick="showModal('notifyModal', 'notifyContent')">
+        🔔 ذكرني بالعبارة القادمة
       </button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="socialModal">
-  <div class="modal-content" id="modalContent">
-    <button class="close-modal" onclick="closeModal()">✖</button>
-    <h3>❤️!شكراً على إعجابك </h3>
-    <p>يسعدني متابعتك لي على حساباتي للحصول على المزيد من العبارات:</p>
-    
+  <div class="modal-content" id="socialContent">
+    <button class="close-modal" onclick="closeModal('socialModal', 'socialContent')">✖</button>
+    <h3>شكراً على إعجابك! ❤️</h3>
+    <p>يسعدني متابعتك لي للحصول على المزيد:</p>
     <div class="social-links">
       <a href="https://www.instagram.com/ahmed_wtd?igsh=MWhyZHhrazI3eXBnMA%3D%3D&utm_source=qr" target="_blank" class="social-btn insta">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         انستقرام
       </a>
-      
       <a href="https://www.tiktok.com/@ahmed.wtd?_r=1&_t=ZS-95mxXYyiAjc" target="_blank" class="social-btn tiktok">
-        <svg viewBox="0 0 24 24">
-          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.96-.5 3.96-1.67 5.55-1.03 1.4-2.52 2.37-4.22 2.68-1.93.35-4.04.14-5.78-.85-1.74-.98-2.98-2.65-3.4-4.57-.45-2.07-.1-4.3 1.16-6.05 1.05-1.46 2.61-2.43 4.36-2.74 1.63-.29 3.32-.12 4.85.57v4.13c-1.04-.42-2.2-.44-3.27-.12-.86.25-1.58.84-2.02 1.62-.48.86-.54 1.93-.15 2.85.34.8 1 1.43 1.83 1.73 1.14.41 2.5.24 3.48-.44 1.03-.72 1.6-1.92 1.6-3.18V.02z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.96-.5 3.96-1.67 5.55-1.03 1.4-2.52 2.37-4.22 2.68-1.93.35-4.04.14-5.78-.85-1.74-.98-2.98-2.65-3.4-4.57-.45-2.07-.1-4.3 1.16-6.05 1.05-1.46 2.61-2.43 4.36-2.74 1.63-.29 3.32-.12 4.85.57v4.13c-1.04-.42-2.2-.44-3.27-.12-.86.25-1.58.84-2.02 1.62-.48.86-.54 1.93-.15 2.85.34.8 1 1.43 1.83 1.73 1.14.41 2.5.24 3.48-.44 1.03-.72 1.6-1.92 1.6-3.18V.02z"/></svg>
         تيك توك
       </a>
     </div>
   </div>
 </div>
 
+<div class="modal-overlay" id="suggestModal">
+  <div class="modal-content" id="suggestContent">
+    <button class="close-modal" onclick="closeModal('suggestModal', 'suggestContent')">✖</button>
+    <h3>لديك عبارة جميلة؟ ✨</h3>
+    <textarea id="userQuote" class="custom-input" placeholder="اكتب عبارتك هنا..."></textarea>
+    <button class="submit-btn" onclick="sendEmail()">إرسال العبارة 🚀</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="notifyModal">
+  <div class="modal-content" id="notifyContent">
+    <button class="close-modal" onclick="closeModal('notifyModal', 'notifyContent')">✖</button>
+    <h3>اشترك بالتنبيهات 🔔</h3>
+    <p>أدخل بريدك الإلكتروني وسأرسل لك إشعاراً فور توفر عبارة جديدة غداً!</p>
+    <input type="email" id="userEmail" class="custom-input" placeholder="example@email.com" dir="ltr">
+    <button class="submit-btn" onclick="subscribeNotify()">تأكيد الاشتراك</button>
+  </div>
+</div>
+
 <script>
+const images = ["images/1.jpg", "images/2.jpg", "images/3.jpg"];
 
-// الصور 
-const images = [
-  "images/1.jpg",
-  "images/2.jpg",
-  "images/3.jpg"
-];
-
-// جلب عبارة اليوم
 function getDailyQuote() {
   const today = new Date().toLocaleDateString(); 
   const savedDate = localStorage.getItem("savedDate");
@@ -298,9 +326,8 @@ function getDailyQuote() {
 
   if (savedDate !== today || savedIndex === null) {
     let newIndex;
-    do {
-      newIndex = Math.floor(Math.random() * images.length);
-    } while (newIndex == savedIndex && images.length > 1);
+    do { newIndex = Math.floor(Math.random() * images.length); } 
+    while (newIndex == savedIndex && images.length > 1);
 
     localStorage.setItem("savedDate", today);
     localStorage.setItem("savedIndex", newIndex);
@@ -309,32 +336,26 @@ function getDailyQuote() {
   return images[savedIndex];
 }
 
-// بدء
 function start() {
   document.getElementById("overlay").style.display = "none";
   document.getElementById("mainContainer").style.display = "flex";
   
   showImage();
-  updateLikeButton();
+  updateLikeDisplay();
 }
 
-// عرض
 function showImage() {
   const img = document.getElementById("quoteImage");
   const bg = document.getElementById("bg");
-
   let src = getDailyQuote();
 
   img.src = src;
   bg.style.backgroundImage = `url(${src})`;
 
   const card = document.getElementById("card");
-  setTimeout(() => {
-    card.classList.add("show");
-  }, 100);
+  setTimeout(() => { card.classList.add("show"); }, 100);
 }
 
-// تنزيل الصورة
 function downloadImage() {
   const imgSrc = document.getElementById("quoteImage").src;
   const link = document.createElement('a');
@@ -345,33 +366,22 @@ function downloadImage() {
   document.body.removeChild(link);
 }
 
-// نظام الإعجاب ونافذة المتابعة
 function toggleLike() {
   let savedIndex = localStorage.getItem("savedIndex");
   let likedImages = JSON.parse(localStorage.getItem("likedImages")) || {};
-  const likeBtn = document.getElementById("likeBtn");
-  const likeIcon = document.getElementById("likeIcon");
 
   if (likedImages[savedIndex]) {
-    // إلغاء الإعجاب
     delete likedImages[savedIndex];
-    likeBtn.classList.remove("liked");
-    likeIcon.innerText = "🤍";
   } else {
-    // إضافة إعجاب
     likedImages[savedIndex] = true;
-    likeBtn.classList.add("liked");
-    likeIcon.innerText = "❤️";
-    
-    // إظهار نافذة الحسابات عند الإعجاب فقط!
-    showModal();
+    showModal('socialModal', 'socialContent'); 
   }
   
   localStorage.setItem("likedImages", JSON.stringify(likedImages));
+  updateLikeDisplay();
 }
 
-// تحديث الزر
-function updateLikeButton() {
+function updateLikeDisplay() {
   let savedIndex = localStorage.getItem("savedIndex");
   let likedImages = JSON.parse(localStorage.getItem("likedImages")) || {};
   const likeBtn = document.getElementById("likeBtn");
@@ -386,35 +396,51 @@ function updateLikeButton() {
   }
 }
 
-// دوال التحكم بالنافذة المنبثقة
-function showModal() {
-  const modal = document.getElementById("socialModal");
-  const content = document.getElementById("modalContent");
+function showModal(modalId, contentId) {
+  const modal = document.getElementById(modalId);
+  const content = document.getElementById(contentId);
   modal.style.display = "flex";
-  // تأخير بسيط لتفعيل الـ transition
-  setTimeout(() => {
-    content.classList.add("show-modal");
-  }, 50);
+  setTimeout(() => { content.classList.add("show-modal"); }, 50);
 }
 
-function closeModal() {
-  const modal = document.getElementById("socialModal");
-  const content = document.getElementById("modalContent");
+function closeModal(modalId, contentId) {
+  const modal = document.getElementById(modalId);
+  const content = document.getElementById(contentId);
   content.classList.remove("show-modal");
-  // انتظار انتهاء حركة الإغلاق ثم إخفاء العنصر تماماً
-  setTimeout(() => {
-    modal.style.display = "none";
-  }, 400);
+  setTimeout(() => { modal.style.display = "none"; }, 400);
 }
 
-// عداد
+function sendEmail() {
+  const userText = document.getElementById("userQuote").value;
+  if (userText.trim() === "") return alert("الرجاء كتابة العبارة!");
+
+  const yourEmail = "lloahmedwattedoll@gmail.com"; 
+  const subject = encodeURIComponent("اقتراح عبارة");
+  const body = encodeURIComponent("مرحباً،\nعبارتي هي:\n" + userText);
+
+  window.location.href = `mailto:${yourEmail}?subject=${subject}&body=${body}`;
+  closeModal('suggestModal', 'suggestContent');
+  document.getElementById("userQuote").value = "";
+}
+
+function subscribeNotify() {
+  const email = document.getElementById("userEmail").value;
+  if (email.trim() === "" || !email.includes("@")) {
+    return alert("الرجاء إدخال بريد إلكتروني صحيح!");
+  }
+  
+  localStorage.setItem("subscribedEmail", email);
+  alert("تم الاشتراك بنجاح! 🎉 سنرسل لك إشعاراً عند توفر عبارة جديدة.");
+  closeModal('notifyModal', 'notifyContent');
+  document.getElementById("userEmail").value = "";
+}
+
 function timer() {
   const now = new Date();
   const tomorrow = new Date();
   tomorrow.setHours(24,0,0,0); 
 
   const diff = tomorrow - now;
-
   const h = Math.floor(diff / (1000*60*60));
   const m = Math.floor((diff % (1000*60*60)) / (1000*60));
   const s = Math.floor((diff % (1000*60)) / 1000); 
@@ -422,10 +448,8 @@ function timer() {
   document.getElementById("timer").innerText =
     "⏳ باقي للعبارة القادمة: " + h + " ساعة و " + m + " دقيقة و " + s + " ثانية";
 }
-
 setInterval(timer, 1000);
 timer();
-
 </script>
 
 </body>
