@@ -2,51 +2,79 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>عبارة عشوائية</title>
+  <title>عبارة اليوم</title>
+
   <style>
     body {
-      text-align: center;
+      margin: 0;
       font-family: Arial;
-      background: #f5f5f5;
+      background: #f3f1ea;
+      text-align: center;
     }
+
+    .container {
+      padding: 40px;
+    }
+
     img {
       max-width: 90%;
-      margin-top: 50px;
+      border-radius: 15px;
+      margin-top: 30px;
+    }
+
+    textarea {
+      width: 80%;
+      height: 100px;
+      margin-top: 40px;
       border-radius: 10px;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      border: none;
+      background: black;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-<h2>✨ عبارة اليوم</h2>
-<img id="quoteImage" src="">
+<div class="container">
+
+  <h2>✨ عبارة اليوم</h2>
+
+  <img id="quoteImage" src="images/1.jpg">
+
+  <h3>شارك عبارتك</h3>
+
+  <form id="form">
+    <textarea name="message" placeholder="اكتب عبارتك هنا"></textarea><br>
+    <button type="submit">إرسال</button>
+  </form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-  const images = [
-    "images/1.jpg",
-    "images/2.jpg",
-    "images/3.jpg",
-    "images/4.jpg",
-    "images/5.jpg"
-  ];
+  emailjs.init("Z9NEFzkoGugN_ewC8");
 
-  function getRandomIndex(excludeIndex) {
-    let index;
-    do {
-      index = Math.floor(Math.random() * images.length);
-    } while (index == excludeIndex && images.length > 1);
+  document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-    return index;
-  }
-
-  let lastIndex = localStorage.getItem("lastQuoteIndex");
-
-  let newIndex = getRandomIndex(lastIndex);
-
-  document.getElementById("quoteImage").src = images[newIndex];
-
-  localStorage.setItem("lastQuoteIndex", newIndex);
+    emailjs.send("service_92yc47f", "template_mvy98sn", {
+      message: this.message.value
+    }).then(() => {
+      alert("تم إرسال عبارتك ✅");
+    });
+  });
 </script>
 
 </body>
