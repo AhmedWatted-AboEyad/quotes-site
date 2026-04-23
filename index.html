@@ -90,19 +90,12 @@ body {
 /* العداد */
 #timer {
   margin-bottom: 20px;
-  font-size: 14px;
-  color: #ccc;
-}
-
-/* زر */
-button.action {
-  margin-top: 15px;
-  padding: 10px 25px;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px 20px;
   border-radius: 15px;
-  border: none;
-  background: white;
-  color: black;
-  cursor: pointer;
+  backdrop-filter: blur(5px);
 }
 
 /* ظهور */
@@ -119,7 +112,7 @@ button.action {
 <div id="bg"></div>
 
 <div class="overlay" id="overlay">
-  <button class="start-btn" onclick="start()">اضغط لتشاهد العبارة</button>
+  <button class="start-btn" onclick="start()">اضغط لتشاهد عبارة اليوم</button>
 </div>
 
 <div class="container">
@@ -127,30 +120,40 @@ button.action {
 
   <div class="card" id="card">
     <img id="quoteImage">
-    <button class="action" onclick="newQuote()">عبارة جديدة</button>
   </div>
 </div>
 
 <script>
 
-// الصور
+// الصور (تأكد من وجود مجلد images وبداخله الصور)
 const images = [
   "images/1.jpg",
   "images/2.jpg",
   "images/3.jpg"
 ];
 
-// اختيار عشوائي
-function getRandom() {
-  let last = localStorage.getItem("last");
-  let i;
+// دالة لجلب عبارة اليوم فقط وعدم تغييرها حتى الغد
+function getDailyQuote() {
+  const today = new Date().toLocaleDateString(); // تاريخ اليوم
+  const savedDate = localStorage.getItem("savedDate");
+  let savedIndex = localStorage.getItem("savedIndex");
 
-  do {
-    i = Math.floor(Math.random() * images.length);
-  } while (i == last && images.length > 1);
+  // إذا كان المستخدم يدخل لأول مرة، أو دخل في يوم جديد
+  if (savedDate !== today || savedIndex === null) {
+    let newIndex;
+    // اختيار صورة عشوائية تختلف عن صورة الأمس
+    do {
+      newIndex = Math.floor(Math.random() * images.length);
+    } while (newIndex == savedIndex && images.length > 1);
 
-  localStorage.setItem("last", i);
-  return images[i];
+    // حفظ التاريخ ورقم الصورة الجديدة
+    localStorage.setItem("savedDate", today);
+    localStorage.setItem("savedIndex", newIndex);
+    return images[newIndex];
+  }
+
+  // إذا دخل المستخدم في نفس اليوم، نعرض له نفس الصورة
+  return images[savedIndex];
 }
 
 // بدء
@@ -164,7 +167,7 @@ function showImage() {
   const img = document.getElementById("quoteImage");
   const bg = document.getElementById("bg");
 
-  let src = getRandom();
+  let src = getDailyQuote();
 
   img.src = src;
   bg.style.backgroundImage = `url(${src})`;
@@ -175,26 +178,23 @@ function showImage() {
   }, 100);
 }
 
-// تغيير
-function newQuote() {
-  showImage();
-}
-
 // عداد
 function timer() {
   const now = new Date();
   const tomorrow = new Date();
-  tomorrow.setHours(24,0,0,0);
+  tomorrow.setHours(24,0,0,0); // منتصف الليل القادم
 
   const diff = tomorrow - now;
 
   const h = Math.floor(diff / (1000*60*60));
   const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const s = Math.floor((diff % (1000*60)) / 1000); // إضافة الثواني
 
   document.getElementById("timer").innerText =
-    "⏳ باقي للعبارة القادمة: " + h + " ساعة و " + m + " دقيقة";
+    "⏳ باقي للعبارة القادمة: " + h + " ساعة و " + m + " دقيقة و " + s + " ثانية";
 }
 
+// تحديث العداد كل ثانية
 setInterval(timer, 1000);
 timer();
 
