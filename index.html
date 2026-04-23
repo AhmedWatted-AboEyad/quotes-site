@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>عبارة اليوم</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
@@ -27,42 +28,44 @@ body {
   transition: 1s;
 }
 
-/* طبقة */
+/* طبقة البداية */
 .overlay {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 10; /* أولوية عالية جداً للزر */
 }
 
 /* زر البداية */
 .start-btn {
   padding: 18px 50px;
   font-size: 18px;
+  font-family: 'Tajawal', sans-serif;
   border-radius: 20px;
   border: none;
   backdrop-filter: blur(10px);
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.15);
   color: white;
   cursor: pointer;
   transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .start-btn:hover {
-  transform: scale(1.1);
-  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.25);
 }
 
-/* المحتوى */
+/* المحتوى الرئيسي مخفي بالبداية */
 .container {
   position: relative;
-  z-index: 3;
+  z-index: 5;
   height: 100vh;
-  display: flex;
+  display: none; /* إخفاء لتجنب التداخل */
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -74,31 +77,82 @@ body {
   backdrop-filter: blur(15px);
   border-radius: 25px;
   padding: 20px;
-  width: 320px;
+  width: 90%;
+  max-width: 350px;
   text-align: center;
   opacity: 0;
   transform: scale(0.9);
   transition: 0.6s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* الصورة */
+/* الصورة - تم التعديل لتكون ملائمة */
 .card img {
   width: 100%;
+  max-height: 55vh; /* تحديد أقصى ارتفاع لضمان ظهورها كاملة */
+  object-fit: contain; /* احتواء الصورة بالكامل دون قص */
   border-radius: 15px;
+  margin-bottom: 15px;
 }
 
 /* العداد */
 #timer {
   margin-bottom: 20px;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 500;
   color: #fff;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 10px 20px;
-  border-radius: 15px;
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* ظهور */
+/* أزرار التفاعل (لايك وتحميل) */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 15px;
+  border: none;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-btn {
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
+}
+
+.download-btn:hover {
+  background: white;
+}
+
+.like-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.like-btn.liked {
+  background: rgba(255, 59, 48, 0.2);
+  color: #ff3b30;
+  border-color: rgba(255, 59, 48, 0.5);
+}
+
+/* تأثير الظهور */
 .show {
   opacity: 1;
   transform: scale(1);
@@ -115,51 +169,59 @@ body {
   <button class="start-btn" onclick="start()">اضغط لتشاهد عبارة اليوم</button>
 </div>
 
-<div class="container">
+<div class="container" id="mainContainer">
   <div id="timer"></div>
 
   <div class="card" id="card">
-    <img id="quoteImage">
+    <img id="quoteImage" src="">
+    
+    <div class="actions">
+      <button class="action-btn like-btn" id="likeBtn" onclick="toggleLike()">
+        <span id="likeIcon">🤍</span> إعجاب
+      </button>
+      <button class="action-btn download-btn" onclick="downloadImage()">
+        ⬇️ حفظ 
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
 
-// الصور (تأكد من وجود مجلد images وبداخله الصور)
+// الصور 
 const images = [
   "images/1.jpg",
   "images/2.jpg",
   "images/3.jpg"
 ];
 
-// دالة لجلب عبارة اليوم فقط وعدم تغييرها حتى الغد
+// جلب عبارة اليوم
 function getDailyQuote() {
-  const today = new Date().toLocaleDateString(); // تاريخ اليوم
+  const today = new Date().toLocaleDateString(); 
   const savedDate = localStorage.getItem("savedDate");
   let savedIndex = localStorage.getItem("savedIndex");
 
-  // إذا كان المستخدم يدخل لأول مرة، أو دخل في يوم جديد
   if (savedDate !== today || savedIndex === null) {
     let newIndex;
-    // اختيار صورة عشوائية تختلف عن صورة الأمس
     do {
       newIndex = Math.floor(Math.random() * images.length);
     } while (newIndex == savedIndex && images.length > 1);
 
-    // حفظ التاريخ ورقم الصورة الجديدة
     localStorage.setItem("savedDate", today);
     localStorage.setItem("savedIndex", newIndex);
     return images[newIndex];
   }
-
-  // إذا دخل المستخدم في نفس اليوم، نعرض له نفس الصورة
   return images[savedIndex];
 }
 
 // بدء
 function start() {
+  // إخفاء طبقة البداية وإظهار الحاوية
   document.getElementById("overlay").style.display = "none";
+  document.getElementById("mainContainer").style.display = "flex";
+  
   showImage();
+  updateLikeButton(); // تحديث حالة الإعجاب عند الفتح
 }
 
 // عرض
@@ -178,23 +240,71 @@ function showImage() {
   }, 100);
 }
 
+// تنزيل الصورة
+function downloadImage() {
+  const imgSrc = document.getElementById("quoteImage").src;
+  const link = document.createElement('a');
+  link.href = imgSrc;
+  link.download = 'عبارة_اليوم.jpg'; // اسم الملف عند التحميل
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// نظام الإعجاب
+function toggleLike() {
+  let savedIndex = localStorage.getItem("savedIndex");
+  let likedImages = JSON.parse(localStorage.getItem("likedImages")) || {};
+  const likeBtn = document.getElementById("likeBtn");
+  const likeIcon = document.getElementById("likeIcon");
+
+  if (likedImages[savedIndex]) {
+    // إلغاء الإعجاب
+    delete likedImages[savedIndex];
+    likeBtn.classList.remove("liked");
+    likeIcon.innerText = "🤍";
+  } else {
+    // إضافة إعجاب
+    likedImages[savedIndex] = true;
+    likeBtn.classList.add("liked");
+    likeIcon.innerText = "❤️";
+  }
+  
+  localStorage.setItem("likedImages", JSON.stringify(likedImages));
+}
+
+// التحقق من حالة الإعجاب عند تحميل الصورة
+function updateLikeButton() {
+  let savedIndex = localStorage.getItem("savedIndex");
+  let likedImages = JSON.parse(localStorage.getItem("likedImages")) || {};
+  const likeBtn = document.getElementById("likeBtn");
+  const likeIcon = document.getElementById("likeIcon");
+
+  if (likedImages[savedIndex]) {
+    likeBtn.classList.add("liked");
+    likeIcon.innerText = "❤️";
+  } else {
+    likeBtn.classList.remove("liked");
+    likeIcon.innerText = "🤍";
+  }
+}
+
 // عداد
 function timer() {
   const now = new Date();
   const tomorrow = new Date();
-  tomorrow.setHours(24,0,0,0); // منتصف الليل القادم
+  tomorrow.setHours(24,0,0,0); 
 
   const diff = tomorrow - now;
 
   const h = Math.floor(diff / (1000*60*60));
   const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-  const s = Math.floor((diff % (1000*60)) / 1000); // إضافة الثواني
+  const s = Math.floor((diff % (1000*60)) / 1000); 
 
   document.getElementById("timer").innerText =
     "⏳ باقي للعبارة القادمة: " + h + " ساعة و " + m + " دقيقة و " + s + " ثانية";
 }
 
-// تحديث العداد كل ثانية
 setInterval(timer, 1000);
 timer();
 
