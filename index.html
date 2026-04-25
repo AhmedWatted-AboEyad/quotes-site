@@ -49,15 +49,22 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
 .suggest-btn { background: rgba(255, 255, 255, 0.05); color: white; border: 1px dashed rgba(255,255,255,0.4); width: 100%; }
 .notify-btn { background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.3); width: 100%; }
 
-/* قسم سوي رسالتك */
-.creator-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); padding: 20px; border-radius: 25px; width: 95%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
+/* قسم سوي رسالتك المطور */
+.creator-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); padding: 15px; border-radius: 25px; width: 95%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
 .canvas-container { position: relative; width: 100%; border-radius: 15px; overflow: hidden; touch-action: none; background: #fff; margin-bottom: 15px; }
 .canvas-container img { width: 100%; display: block; user-select: none; pointer-events: none; }
-.draggable-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000; font-size: 24px; font-weight: bold; font-family: 'Tajawal', sans-serif; cursor: move; text-align: center; white-space: pre-wrap; padding: 10px; user-select: none; }
-.controls { display: flex; flex-direction: column; gap: 10px; }
-.custom-input, .custom-select { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; padding: 12px; font-family: inherit; box-sizing: border-box; outline: none; text-align: right;}
+.draggable-text { position: absolute; transform: translate(-50%, -50%); color: #000; font-size: 24px; font-weight: bold; font-family: 'Tajawal', sans-serif; cursor: move; text-align: center; white-space: pre-wrap; padding: 10px; user-select: none; text-shadow: 0px 0px 5px rgba(255,255,255,0.7); }
+
+/* أدوات التحكم الجديدة */
+.control-group { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
+.control-group h4 { margin: 0 0 10px 0; font-size: 14px; color: #ffd700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+.controls { display: flex; flex-direction: column; gap: 8px; }
+.custom-input, .custom-select { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 10px; padding: 10px; font-family: inherit; box-sizing: border-box; outline: none; text-align: right;}
 .custom-select option { background: #333; color: white; }
-textarea.custom-input { height: 80px; resize: none; }
+textarea.custom-input { height: 60px; resize: none; }
+.slider-container { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; }
+.slider-container span { font-size: 12px; white-space: nowrap; color: #ccc; }
+input[type=range] { flex: 1; accent-color: #ffd700; }
 
 /* النوافذ المنبثقة (Modals) */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(8px); }
@@ -128,33 +135,67 @@ textarea.custom-input { height: 80px; resize: none; }
   <div id="createTab" class="tab-content">
     <div class="creator-card">
       <h3 style="margin-top: 0; text-align: center;">صمم رسالتك بنفسك ✨</h3>
-      <p style="font-size: 12px; text-align: center; color: #ccc;">اكتب النص واسحبه للمكان المناسب</p>
+      <p style="font-size: 12px; text-align: center; color: #ccc; margin-bottom: 15px;">اكتب النصوص واسحبها بإصبعك للمكان المناسب</p>
       
       <div class="canvas-container" id="captureArea">
         <img src="images/template.jpg" id="templateBg" alt="خلفية">
-        <div class="draggable-text" id="dragText">اكتب رسالتك هنا...</div>
+        <div class="draggable-text" id="textElement1" style="top: 40%; left: 50%;">اكتب رسالتك هنا...</div>
+        <div class="draggable-text" id="textElement2" style="top: 60%; left: 50%;">نص إضافي (اختياري)</div>
       </div>
 
-      <div class="controls">
-        <textarea id="customText" class="custom-input" placeholder="اكتب رسالتك..." oninput="updateText()"></textarea>
-        <div class="actions-row">
-          <select id="fontSelect" class="custom-select" onchange="changeFont()">
-            <option value="Tajawal">خط تجوال</option>
-            <option value="Amiri">خط أميري</option>
-            <option value="Cairo">خط كايرو</option>
-            <option value="Reem Kufi">خط كوفي</option>
-          </select>
-          <select id="colorSelect" class="custom-select" onchange="changeColor()">
-            <option value="#000000">لون أسود</option>
-            <option value="#FFFFFF">لون أبيض</option>
-            <option value="#8B4513">لون بني</option>
-            <option value="#2F4F4F">رمادي غامق</option>
-          </select>
+      <div class="control-group">
+        <h4>النص الأساسي 💬</h4>
+        <div class="controls">
+          <textarea id="customText1" class="custom-input" placeholder="اكتب رسالتك الأساسية..." oninput="updateText('1')"></textarea>
+          <div class="actions-row">
+            <select id="fontSelect1" class="custom-select" onchange="updateStyle('1')">
+              <option value="Tajawal">خط تجوال</option>
+              <option value="Amiri">خط أميري</option>
+              <option value="Cairo">خط كايرو</option>
+              <option value="Reem Kufi">خط كوفي</option>
+            </select>
+            <select id="colorSelect1" class="custom-select" onchange="updateStyle('1')">
+              <option value="#000000">لون أسود</option>
+              <option value="#FFFFFF">لون أبيض</option>
+              <option value="#8B4513">لون بني</option>
+              <option value="#2F4F4F">رمادي غامق</option>
+            </select>
+          </div>
+          <div class="slider-container">
+            <span>حجم الخط:</span>
+            <input type="range" id="sizeSelect1" min="12" max="60" value="24" oninput="updateStyle('1')">
+          </div>
         </div>
-        <button class="action-btn download-btn" style="width: 100%; margin-top: 5px;" onclick="exportCustomImage()">
-          ⬇️ حفظ التصميم
-        </button>
       </div>
+
+      <div class="control-group">
+        <h4>النص الإضافي (اسم/حكمة) ✒️</h4>
+        <div class="controls">
+          <input type="text" id="customText2" class="custom-input" placeholder="اتركه فارغاً إذا لم ترده..." oninput="updateText('2')">
+          <div class="actions-row">
+            <select id="fontSelect2" class="custom-select" onchange="updateStyle('2')">
+              <option value="Tajawal">خط تجوال</option>
+              <option value="Amiri">خط أميري</option>
+              <option value="Cairo">خط كايرو</option>
+              <option value="Reem Kufi">خط كوفي</option>
+            </select>
+            <select id="colorSelect2" class="custom-select" onchange="updateStyle('2')">
+              <option value="#000000">لون أسود</option>
+              <option value="#FFFFFF">لون أبيض</option>
+              <option value="#8B4513">لون بني</option>
+              <option value="#2F4F4F">رمادي غامق</option>
+            </select>
+          </div>
+          <div class="slider-container">
+            <span>حجم الخط:</span>
+            <input type="range" id="sizeSelect2" min="10" max="40" value="18" oninput="updateStyle('2')">
+          </div>
+        </div>
+      </div>
+
+      <button class="action-btn download-btn" style="width: 100%; margin-top: 5px;" onclick="exportCustomImage()">
+        ⬇️ حفظ التصميم
+      </button>
     </div>
   </div>
 </div>
@@ -198,11 +239,10 @@ textarea.custom-input { height: 80px; resize: none; }
 
 <script>
 // ================= إعدادات رسالة اليوم =================
-const images = ["images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg", "images/6.jpg", "images/7.jpg"]; // قائمة صورك
+const images = ["images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg", "images/6.jpg", "images/7.jpg"]; 
 const MAX_VIEWS = 3;
-const API_KEY = "3863ddcd-c4bc-4099-9148-d4344f98bdd2"; // مفتاح إرسال الايميلات
+const API_KEY = "3863ddcd-c4bc-4099-9148-d4344f98bdd2"; 
 
-// إظهار الإشعارات السريعة
 function showToast(message) {
   let container = document.getElementById("toast-container");
   if (!container) { container = document.createElement("div"); container.id = "toast-container"; document.body.appendChild(container); }
@@ -211,16 +251,14 @@ function showToast(message) {
   setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 400); }, 3000);
 }
 
-// دالة جلب صورة عشوائية
 function getRandomImage(currentIndex) {
-  if (images.length === 0) return 0; // حماية من الأخطاء
+  if (images.length === 0) return 0; 
   let newIndex;
   do { newIndex = Math.floor(Math.random() * images.length); } 
   while (newIndex === currentIndex && images.length > 1);
   return newIndex;
 }
 
-// تجهيز التطبيق والرسائل اليومية
 function initApp() {
   const today = new Date().toLocaleDateString();
   let savedDate = localStorage.getItem("appDate");
@@ -232,7 +270,6 @@ function initApp() {
   }
 }
 
-// شاشة البداية
 function showSplashScreen() {
   const overlay = document.getElementById("overlay");
   const splash = document.getElementById("splashScreen");
@@ -240,7 +277,7 @@ function showSplashScreen() {
   setTimeout(() => {
     overlay.style.display = "none";
     splash.style.display = "flex";
-    initApp(); // تهيئة العدادات
+    initApp(); 
     setTimeout(() => splash.style.opacity = "1", 50);
   }, 500);
   
@@ -249,12 +286,11 @@ function showSplashScreen() {
     setTimeout(() => {
       splash.style.display = "none";
       document.getElementById("mainApp").style.display = "flex";
-      updateQuoteUI(); // تحميل الصورة الأولى
+      updateQuoteUI(); 
     }, 500);
   }, 2000);
 }
 
-// تحميل الرسالة التالية
 function loadNextQuote() {
   let count = parseInt(localStorage.getItem("viewCount") || "1");
   if (count < MAX_VIEWS) {
@@ -265,19 +301,17 @@ function loadNextQuote() {
     let nextIndex = getRandomImage(currentIndex);
     localStorage.setItem("currentQuoteIndex", nextIndex.toString());
     
-    // إخفاء الصورة وتحديثها لتجنب التعليق والشاشة السوداء
     document.getElementById("quoteImage").style.opacity = "0";
     setTimeout(updateQuoteUI, 400); 
   }
 }
 
-// تحديث واجهة الرسالة والصورة
 function updateQuoteUI() {
   let count = parseInt(localStorage.getItem("viewCount") || "1");
   let indexStr = localStorage.getItem("currentQuoteIndex");
   let index = indexStr ? parseInt(indexStr) : 0;
   
-  if (index >= images.length) index = 0; // حماية
+  if (index >= images.length) index = 0; 
   let src = images[index];
   
   const img = document.getElementById("quoteImage");
@@ -303,7 +337,6 @@ function updateQuoteUI() {
   }
 }
 
-// نظام التوقيت لليوم التالي
 function startTimer() {
   function update() {
     const now = new Date(); const tomorrow = new Date(); tomorrow.setHours(24,0,0,0);
@@ -335,7 +368,7 @@ function toggleLike() {
   } else { 
     likedImages[index] = true; 
     showToast("تم الإعجاب بالرسالة ❤️"); 
-    setTimeout(() => { showModal('socialModal', 'socialContent'); }, 800); // إظهار نافذة السوشيال ميديا
+    setTimeout(() => { showModal('socialModal', 'socialContent'); }, 800); 
   } 
   localStorage.setItem("likedImages", JSON.stringify(likedImages)); 
   updateLikeDisplay(); 
@@ -350,7 +383,6 @@ function updateLikeDisplay() {
   else { likeBtn.classList.remove("liked"); likeIcon.innerText = "🤍"; } 
 }
 
-// إرسال الاقتراحات
 async function sendQuoteToEmail() { 
   const userText = document.getElementById("userQuote").value; 
   if (userText.trim() === "") return showToast("الرجاء كتابة الرسالة أولاً ✍️"); 
@@ -364,7 +396,6 @@ async function sendQuoteToEmail() {
   btn.innerText = "إرسال الرسالة 🚀"; btn.disabled = false; 
 }
 
-// الاشتراك بالتنبيهات
 async function subscribeNotify() { 
   const email = document.getElementById("userEmail").value; 
   if (email.trim() === "" || !email.includes("@")) return showToast("الرجاء إدخال بريد إلكتروني صحيح 📧"); 
@@ -378,7 +409,6 @@ async function subscribeNotify() {
   btn.innerText = "تأكيد الاشتراك"; btn.disabled = false; 
 }
 
-// ================= التنقل بين الأقسام وسوي رسالتك =================
 function switchTab(tabId, btnId) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -386,14 +416,33 @@ function switchTab(tabId, btnId) {
   document.getElementById(btnId).classList.add('active');
 }
 
-function updateText() { document.getElementById('dragText').innerText = document.getElementById('customText').value || "اكتب رسالتك هنا..."; }
-function changeFont() { document.getElementById('dragText').style.fontFamily = document.getElementById('fontSelect').value; }
-function changeColor() { document.getElementById('dragText').style.color = document.getElementById('colorSelect').value; }
+// ================= نظام "سوي رسالتك" المطور =================
+// دالة لتحديث النصوص الفورية
+function updateText(id) { 
+  const val = document.getElementById('customText' + id).value;
+  document.getElementById('textElement' + id).innerText = val || (id === '1' ? 'اكتب رسالتك هنا...' : '');
+}
 
-// برمجة السحب والإفلات للنص
-const dragItem = document.getElementById("dragText");
+// دالة لتحديث الخط واللون والحجم
+function updateStyle(id) {
+  const elem = document.getElementById('textElement' + id);
+  elem.style.fontFamily = document.getElementById('fontSelect' + id).value;
+  elem.style.color = document.getElementById('colorSelect' + id).value;
+  elem.style.fontSize = document.getElementById('sizeSelect' + id).value + 'px';
+}
+
+// تهيئة الإستايل عند تحميل الصفحة
+window.addEventListener('DOMContentLoaded', () => {
+  updateStyle('1');
+  updateStyle('2');
+  updateText('1');
+  updateText('2');
+});
+
+// برمجة السحب والإفلات المتقدم لأكثر من عنصر
 const container = document.getElementById("captureArea");
-let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+let activeElement = null;
+let initialX, initialY;
 
 container.addEventListener("touchstart", dragStart, {passive: false});
 container.addEventListener("touchend", dragEnd, false);
@@ -403,13 +452,27 @@ container.addEventListener("mouseup", dragEnd, false);
 container.addEventListener("mousemove", drag, false);
 container.addEventListener("mouseleave", dragEnd, false);
 
-function dragStart(e) { if (e.target === dragItem) { active = true; initialX = (e.type === "touchstart" ? e.touches[0].clientX : e.clientX) - xOffset; initialY = (e.type === "touchstart" ? e.touches[0].clientY : e.clientY) - yOffset; } }
-function dragEnd(e) { active = false; }
+function dragStart(e) { 
+  if (e.target.classList.contains('draggable-text')) { 
+    activeElement = e.target; 
+    let xOffset = activeElement.dataset.x ? parseFloat(activeElement.dataset.x) : 0;
+    let yOffset = activeElement.dataset.y ? parseFloat(activeElement.dataset.y) : 0;
+    initialX = (e.type === "touchstart" ? e.touches[0].clientX : e.clientX) - xOffset; 
+    initialY = (e.type === "touchstart" ? e.touches[0].clientY : e.clientY) - yOffset; 
+  } 
+}
+function dragEnd(e) { activeElement = null; }
 function drag(e) {
-  if (active) {
+  if (activeElement) {
     e.preventDefault();
-    currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX; currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY; xOffset = currentX; yOffset = currentY;
-    dragItem.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
+    let currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX; 
+    let currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY; 
+    
+    // حفظ الإحداثيات داخل العنصر الملموس نفسه
+    activeElement.dataset.x = currentX;
+    activeElement.dataset.y = currentY;
+    
+    activeElement.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
   }
 }
 
@@ -419,9 +482,29 @@ function exportCustomImage() {
   const btn = document.querySelector('.creator-card .download-btn');
   const originalText = btn.innerHTML;
   btn.innerHTML = "جاري التجهيز ⏳..."; btn.disabled = true;
+  
+  // حفظ حالة الظهور الحالية قبل التصوير
+  const txt1 = document.getElementById('textElement1');
+  const txt2 = document.getElementById('textElement2');
+  const t1Display = txt1.style.display;
+  const t2Display = txt2.style.display;
+  
+  // إخفاء النصوص الفارغة حتى لا تظهر في الصورة كمسافة بيضاء
+  if(txt1.innerText.trim() === '' || txt1.innerText === 'اكتب رسالتك هنا...') txt1.style.display = 'none';
+  if(txt2.innerText.trim() === '') txt2.style.display = 'none';
+
   html2canvas(captureArea, { scale: 3, useCORS: true }).then(canvas => {
-    const link = document.createElement('a'); link.download = 'رسالتي_الخاصة.jpg'; link.href = canvas.toDataURL('image/jpeg', 0.9);
-    link.click(); showToast("تم حفظ تصميمك بنجاح! 🎉"); btn.innerHTML = originalText; btn.disabled = false;
+    // إعادة كل شيء كما كان بعد أخذ اللقطة
+    txt1.style.display = t1Display;
+    txt2.style.display = t2Display;
+
+    const link = document.createElement('a'); 
+    link.download = 'رسالتي_الخاصة.jpg'; 
+    link.href = canvas.toDataURL('image/jpeg', 0.9);
+    link.click(); 
+    showToast("تم حفظ تصميمك بنجاح! 🎉"); 
+    btn.innerHTML = originalText; 
+    btn.disabled = false;
   });
 }
 </script>
