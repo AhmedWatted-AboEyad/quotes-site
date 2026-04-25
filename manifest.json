@@ -1,7 +1,7 @@
 {
-  "name": "عبارة اليوم",
-  "short_name": "عبارة",
-  "description": "موقع يمنحك عبارة تحفيزية وتأملية جديدة كل يوم.",
+  "name": "رسالة اليوم",
+  "short_name": "رسالة",
+  "description": "موقع يمنحك رسالة تحفيزية وتأملية جديدة كل يوم.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
