@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>عبارة اليوم</title>
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -12,207 +15,107 @@ body {
   margin: 0;
   font-family: 'Tajawal', sans-serif;
   overflow-x: hidden;
-  /* سمحنا بالنزول لأسفل لتجنب قص الأزرار في الهواتف الصغيرة */
   overflow-y: auto; 
   background: black;
   color: white;
   min-height: 100dvh;
 }
 
-/* الخلفية */
 #bg {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-size: cover; background-position: center;
   filter: blur(25px) brightness(0.5);
-  transform: scale(1.2);
-  transition: 1s;
-  z-index: -1; /* عشان تظل ورا وما تأثر على النزول */
+  transform: scale(1.2); transition: 1s; z-index: -1;
 }
 
-/* طبقة البداية */
 .overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
+  position: fixed; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); display: flex;
+  justify-content: center; align-items: center; z-index: 10;
 }
 
 .start-btn {
-  padding: 18px 40px;
-  font-size: 18px;
-  font-family: 'Tajawal', sans-serif;
-  border-radius: 20px;
-  border: none;
-  backdrop-filter: blur(10px);
-  background: rgba(255,255,255,0.15);
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  padding: 18px 40px; font-size: 18px; font-family: 'Tajawal', sans-serif;
+  border-radius: 20px; border: none; backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.15); color: white;
+  cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-/* المحتوى الرئيسي */
 .container {
-  position: relative;
-  z-index: 5;
-  min-height: 100dvh;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px 10px 40px 10px; /* مساحة من تحت عشان الأزرار تبين براحتها */
-  box-sizing: border-box;
+  position: relative; z-index: 5; min-height: 100dvh;
+  display: none; flex-direction: column; justify-content: center;
+  align-items: center; padding: 20px 10px 40px 10px; box-sizing: border-box;
 }
 
-/* العداد */
 #timer {
-  margin-bottom: 15px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  border-radius: 20px;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
+  margin-bottom: 15px; font-size: 15px; font-weight: 500; color: #fff;
+  background: rgba(0, 0, 0, 0.5); padding: 10px 20px; border-radius: 20px;
+  backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); text-align: center;
 }
 
-/* الكرت - تم تكبيره */
 .card {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(15px);
-  border-radius: 25px;
-  padding: 15px;
-  width: 95%; /* الكرت أخذ مساحة أكبر من عرض الشاشة */
-  max-width: 380px; /* تكبير الحد الأقصى */
-  text-align: center;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: 0.6s;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  box-sizing: border-box;
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(15px);
+  border-radius: 25px; padding: 15px; width: 95%; max-width: 380px;
+  text-align: center; opacity: 0; transform: scale(0.9);
+  transition: 0.6s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box;
 }
 
-/* الصورة - تم تكبيرها */
 .card img {
-  width: 100%;
-  max-height: 55vh; /* زيادة الارتفاع عشان تكون أوضح */
-  object-fit: contain;
-  border-radius: 15px;
-  margin-bottom: 15px;
+  width: 100%; max-height: 55vh; object-fit: contain;
+  border-radius: 15px; margin-bottom: 15px;
+  opacity: 0; transition: opacity 0.8s ease; /* تأثير التحميل */
 }
 
-/* أزرار التفاعل */
-.actions-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.actions-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
+.actions-container { display: flex; flex-direction: column; gap: 12px; }
+.actions-row { display: flex; justify-content: space-between; gap: 10px; }
 
 .action-btn {
-  flex: 1;
-  padding: 12px;
-  border-radius: 15px;
-  border: none;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
+  flex: 1; padding: 12px; border-radius: 15px; border: none;
+  font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: bold;
+  cursor: pointer; transition: 0.3s; display: flex; justify-content: center;
+  align-items: center; gap: 6px;
 }
 
 .download-btn { background: rgba(255, 255, 255, 0.9); color: black; }
-.like-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-.like-btn.liked {
-  background: rgba(255, 59, 48, 0.2);
-  color: #ff3b30;
-  border-color: rgba(255, 59, 48, 0.5);
-}
+.like-btn { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.like-btn.liked { background: rgba(255, 59, 48, 0.2); color: #ff3b30; border-color: rgba(255, 59, 48, 0.5); }
 
-.suggest-btn {
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  border: 1px dashed rgba(255,255,255,0.4);
-  width: 100%;
+/* حركة نبض القلب */
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(1); }
 }
+.pop-anim { animation: heartPop 0.4s ease; display: inline-block; }
 
-.notify-btn {
-  background: rgba(255, 215, 0, 0.15);
-  color: #ffd700;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  width: 100%;
-}
-
+.suggest-btn { background: rgba(255, 255, 255, 0.05); color: white; border: 1px dashed rgba(255,255,255,0.4); width: 100%; }
+.notify-btn { background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.3); width: 100%; }
 .show { opacity: 1; transform: scale(1); }
 
-/* ---------------- النوافذ المنبثقة ---------------- */
+/* النوافذ المنبثقة */
 .modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8);
-  display: none;
-  justify-content: center; align-items: center;
-  z-index: 20;
-  backdrop-filter: blur(8px);
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center;
+  z-index: 20; backdrop-filter: blur(8px);
 }
-
 .modal-content {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 25px;
-  padding: 25px;
-  width: 85%;
-  max-width: 320px;
-  text-align: center;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-  transform: scale(0.8);
-  opacity: 0;
-  transition: 0.4s;
-  position: relative;
-  box-sizing: border-box;
+  background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; padding: 25px;
+  width: 85%; max-width: 320px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  transform: scale(0.8); opacity: 0; transition: 0.4s; position: relative; box-sizing: border-box;
 }
-
 .modal-content.show-modal { transform: scale(1); opacity: 1; }
 
 .close-modal {
-  position: absolute;
-  top: 15px; left: 15px;
-  background: rgba(255,255,255,0.1);
-  border: none; color: white;
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex; justify-content: center; align-items: center;
+  position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.1);
+  border: none; color: white; width: 30px; height: 30px; border-radius: 50%;
+  cursor: pointer; display: flex; justify-content: center; align-items: center;
 }
 
 .modal-content h3 { margin: 0 0 10px 0; font-size: 18px; }
 .modal-content p { margin: 0 0 15px 0; font-size: 14px; color: #ccc; line-height: 1.5; }
 
-/* أزرار حسابات التواصل */
 .social-links { display: flex; flex-direction: column; gap: 10px; }
 .social-btn {
   display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -222,20 +125,10 @@ body {
 .tiktok { background: #000; border: 1px solid rgba(255,255,255,0.3); }
 .social-btn svg { width: 20px; height: 20px; fill: white; }
 
-/* الإدخال */
 .custom-input {
-  width: 100%;
-  background: rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white;
-  border-radius: 15px;
-  padding: 12px 15px;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 14px;
-  box-sizing: border-box;
-  margin-bottom: 15px;
-  outline: none;
-  text-align: right;
+  width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3);
+  color: white; border-radius: 15px; padding: 12px 15px; font-family: 'Tajawal', sans-serif;
+  font-size: 14px; box-sizing: border-box; margin-bottom: 15px; outline: none; text-align: right;
 }
 textarea.custom-input { height: 90px; resize: none; }
 .submit-btn {
@@ -244,6 +137,19 @@ textarea.custom-input { height: 90px; resize: none; }
   cursor: pointer; width: 100%; transition: 0.3s;
 }
 .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* الإشعارات العصرية (Toasts) */
+#toast-container {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; display: flex; flex-direction: column; gap: 10px;
+}
+.toast {
+  background: rgba(255,255,255,0.95); color: black; padding: 12px 25px;
+  border-radius: 20px; font-family: 'Tajawal', sans-serif; font-weight: bold; font-size: 14px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4); opacity: 0; transform: translateY(20px);
+  transition: all 0.4s ease; text-align: center;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -258,7 +164,7 @@ textarea.custom-input { height: 90px; resize: none; }
   <div id="timer"></div>
 
   <div class="card" id="card">
-    <img id="quoteImage" src="">
+    <img id="quoteImage" src="" onload="this.style.opacity='1'">
     
     <div class="actions-container">
       <div class="actions-row">
@@ -312,12 +218,33 @@ textarea.custom-input { height: 90px; resize: none; }
     <h3>اشترك بالتنبيهات 🔔</h3>
     <p>أدخل بريدك الإلكتروني وسأرسل لك إشعاراً فور توفر عبارة جديدة غداً!</p>
     <input type="email" id="userEmail" class="custom-input" placeholder="example@email.com" dir="ltr">
-    <button class="submit-btn" onclick="subscribeNotify()">تأكيد الاشتراك</button>
+    <button id="submitNotifyBtn" class="submit-btn" onclick="subscribeNotify()">تأكيد الاشتراك</button>
   </div>
 </div>
 
 <script>
 const images = ["images/1.jpg", "images/2.jpg", "images/3.jpg"];
+const API_KEY = "3863ddcd-c4bc-4099-9148-d4344f98bdd2"; // مفتاحك الخاص
+
+// نظام الإشعارات العصرية
+function showToast(message) {
+  let container = document.getElementById("toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toast-container";
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerText = message;
+  container.appendChild(toast);
+  
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
+}
 
 function getDailyQuote() {
   const today = new Date().toLocaleDateString(); 
@@ -339,7 +266,6 @@ function getDailyQuote() {
 function start() {
   document.getElementById("overlay").style.display = "none";
   document.getElementById("mainContainer").style.display = "flex";
-  
   showImage();
   updateLikeDisplay();
 }
@@ -349,6 +275,7 @@ function showImage() {
   const bg = document.getElementById("bg");
   let src = getDailyQuote();
 
+  img.style.opacity = "0"; // تصفير الشفافية قبل التحميل
   img.src = src;
   bg.style.backgroundImage = `url(${src})`;
 
@@ -364,17 +291,25 @@ function downloadImage() {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  showToast("بدأ تحميل الصورة 📥");
 }
 
 function toggleLike() {
   let savedIndex = localStorage.getItem("savedIndex");
   let likedImages = JSON.parse(localStorage.getItem("likedImages")) || {};
+  const likeIcon = document.getElementById("likeIcon");
+
+  // إضافة حركة النبض
+  likeIcon.classList.remove("pop-anim");
+  void likeIcon.offsetWidth; 
+  likeIcon.classList.add("pop-anim");
 
   if (likedImages[savedIndex]) {
     delete likedImages[savedIndex];
   } else {
     likedImages[savedIndex] = true;
-    showModal('socialModal', 'socialContent'); 
+    showToast("تم الإعجاب بالعبارة ❤️");
+    setTimeout(() => { showModal('socialModal', 'socialContent'); }, 1000);
   }
   
   localStorage.setItem("likedImages", JSON.stringify(likedImages));
@@ -410,10 +345,9 @@ function closeModal(modalId, contentId) {
   setTimeout(() => { modal.style.display = "none"; }, 400);
 }
 
-// دالة الإرسال الصامت الجديدة
 async function sendQuoteToEmail() {
   const userText = document.getElementById("userQuote").value;
-  if (userText.trim() === "") return alert("الرجاء كتابة العبارة!");
+  if (userText.trim() === "") return showToast("الرجاء كتابة العبارة أولاً ✍️");
 
   const btn = document.getElementById("submitQuoteBtn");
   btn.innerText = "جاري الإرسال ⏳...";
@@ -424,39 +358,54 @@ async function sendQuoteToEmail() {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify({
-        // 🔴 ضع مفتاح الـ API الخاص بك هنا 🔴
-        access_key: "3863ddcd-c4bc-4099-9148-d4344f98bdd2", 
-        subject: "اقتراح عبارة جديدة من الموقع",
+        access_key: API_KEY, 
+        subject: "💡 اقتراح عبارة جديدة من الموقع",
         message: userText
       })
     });
-
     const result = await response.json();
     if (result.success) {
-      alert("تم إرسال العبارة بنجاح! شكراً لك ❤️");
+      showToast("تم إرسال العبارة بنجاح! شكراً لك ❤️");
       closeModal('suggestModal', 'suggestContent');
       document.getElementById("userQuote").value = "";
-    } else {
-      alert("حدث خطأ، يرجى المحاولة لاحقاً.");
-    }
-  } catch (error) {
-    alert("تأكد من اتصالك بالإنترنت.");
-  }
+    } else { showToast("حدث خطأ، يرجى المحاولة لاحقاً ❌"); }
+  } catch (error) { showToast("تأكد من اتصالك بالإنترنت 🌐"); }
 
   btn.innerText = "إرسال العبارة 🚀";
   btn.disabled = false;
 }
 
-function subscribeNotify() {
+async function subscribeNotify() {
   const email = document.getElementById("userEmail").value;
   if (email.trim() === "" || !email.includes("@")) {
-    return alert("الرجاء إدخال بريد إلكتروني صحيح!");
+    return showToast("الرجاء إدخال بريد إلكتروني صحيح 📧");
   }
   
-  localStorage.setItem("subscribedEmail", email);
-  alert("تم الاشتراك بنجاح! 🎉 سنرسل لك إشعاراً عند توفر عبارة جديدة.");
-  closeModal('notifyModal', 'notifyContent');
-  document.getElementById("userEmail").value = "";
+  const btn = document.getElementById("submitNotifyBtn");
+  btn.innerText = "جاري التسجيل ⏳...";
+  btn.disabled = true;
+
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        access_key: API_KEY, 
+        subject: "🔔 مشترك جديد في التنبيهات",
+        message: "تم اشتراك بريد جديد:\n" + email
+      })
+    });
+    const result = await response.json();
+    if (result.success) {
+      localStorage.setItem("subscribedEmail", email);
+      showToast("تم الاشتراك بنجاح! 🎉");
+      closeModal('notifyModal', 'notifyContent');
+      document.getElementById("userEmail").value = "";
+    } else { showToast("حدث خطأ، يرجى المحاولة لاحقاً ❌"); }
+  } catch (error) { showToast("تأكد من اتصالك بالإنترنت 🌐"); }
+
+  btn.innerText = "تأكيد الاشتراك";
+  btn.disabled = false;
 }
 
 function timer() {
@@ -474,7 +423,17 @@ function timer() {
 }
 setInterval(timer, 1000);
 timer();
-</script>
 
+// تسجيل Service Worker ليعمل الموقع كتطبيق
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      console.log('Service Worker registered!');
+    }).catch(err => {
+      console.log('Service Worker registration failed: ', err);
+    });
+  });
+}
+</script>
 </body>
 </html>
