@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#000000">
 <link rel="apple-touch-icon" href="images/icon.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Reem+Kufi:wght@400;700&family=Almarai:wght@400;700&family=Lalezar&family=Changa:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
@@ -25,15 +25,16 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
 #splashScreen img { width: 150px; height: 150px; border-radius: 30px; animation: pulseIcon 1.5s infinite; }
 @keyframes pulseIcon { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
 
-/* الحاوية الرئيسية وشريط التنقل */
+/* الحاوية الرئيسية وشريط التنقل - تم التحسين لتناسب شاشات الهواتف (iPhone 13 Pro) */
 #mainApp { display: none; flex-direction: column; min-height: 100dvh; position: relative; z-index: 5; }
-.header-container { display: flex; flex-direction: column; align-items: center; padding: 15px 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); position: sticky; top: 0; z-index: 10; gap: 10px; }
+.header-container { display: flex; flex-direction: column; align-items: center; padding: 10px 0; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); position: sticky; top: 0; z-index: 10; gap: 10px; width: 100%; }
 .streak-badge { background: rgba(255, 150, 0, 0.2); border: 1px solid rgba(255, 150, 0, 0.5); color: #ffd700; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-.header { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 15px; border-radius: 20px; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); }
+.header { display: flex; justify-content: center; gap: 8px; flex-wrap: nowrap; overflow-x: auto; width: 100%; padding: 5px 10px; box-sizing: border-box; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.header::-webkit-scrollbar { display: none; }
+.nav-btn { white-space: nowrap; flex-shrink: 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 15px; border-radius: 20px; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); }
 .nav-btn.active { background: rgba(255,255,255,0.9); color: black; box-shadow: 0 4px 15px rgba(255,255,255,0.3); }
 
-/* الأقسام (Tabs) */
+/* الأقسام */
 .tab-content { display: none; flex-direction: column; align-items: center; padding: 10px 10px 40px 10px; flex: 1; width: 100%; box-sizing: border-box; }
 .tab-content.active-tab { display: flex; }
 
@@ -42,7 +43,7 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
 .card { background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border-radius: 25px; padding: 15px; width: 100%; max-width: 400px; text-align: center; opacity: 1; transition: 0.6s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
 .card img { width: 100%; max-height: 60vh; object-fit: contain; border-radius: 15px; margin-bottom: 15px; opacity: 0; transition: opacity 0.5s ease; }
 .actions-container { display: flex; flex-direction: column; gap: 12px; }
-.actions-row { display: flex; justify-content: space-between; gap: 8px; }
+.actions-row { display: flex; justify-content: space-between; gap: 8px; width: 100%; }
 .action-btn { flex: 1; padding: 12px 5px; border-radius: 15px; border: none; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
 .next-btn { background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%); color: white; width: 100%; }
 .download-btn { background: rgba(255, 255, 255, 0.9); color: black; }
@@ -52,32 +53,37 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
 .suggest-btn { background: rgba(255, 255, 255, 0.05); color: white; border: 1px dashed rgba(255,255,255,0.4); width: 100%; }
 
 /* معرض المفضلات */
-.favorites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; width: 100%; max-width: 500px; }
-.fav-item { width: 100%; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); transition: 0.3s; }
-.empty-state { text-align: center; color: #ccc; margin-top: 50px; font-size: 18px; }
+.favorites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; width: 100%; max-width: 500px; }
+.fav-item { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); transition: 0.3s; cursor: pointer; }
+.empty-state { text-align: center; color: #ccc; margin-top: 50px; font-size: 16px; grid-column: 1 / -1; }
 
-/* قسم سوي رسالتك المطور (النصوص الحرة) */
+/* قسم سوي رسالتك المطور (عناصر حرة) */
 .creator-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); padding: 15px; border-radius: 25px; width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
-.canvas-container { position: relative; width: 100%; border-radius: 15px; overflow: hidden; touch-action: none; background: #fff; margin-bottom: 15px; }
-.canvas-container img { width: 100%; display: block; user-select: none; pointer-events: none; }
-.draggable-text { position: absolute; transform-origin: center center; color: #000; font-size: 24px; font-weight: bold; font-family: 'Tajawal', sans-serif; cursor: move; text-align: center; white-space: pre-wrap; padding: 5px; user-select: none; text-shadow: 0px 0px 5px rgba(255,255,255,0.7); }
-.draggable-text.selected { border: 2px dashed #ffd700; background: rgba(255,255,255,0.2); border-radius: 5px; }
+.canvas-container { position: relative; width: 100%; border-radius: 15px; overflow: hidden; touch-action: none; background: #000; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; min-height: 300px; }
+.canvas-container > img#templateBg { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
+
+/* العناصر القابلة للسحب (نصوص وصور) */
+.draggable-item { position: absolute; transform-origin: center center; cursor: move; user-select: none; z-index: 1; }
+.draggable-item.selected { border: 2px dashed #ffd700; background: rgba(255,255,255,0.2); border-radius: 5px; }
+.draggable-text { color: #fff; font-size: 24px; font-weight: bold; font-family: 'Tajawal', sans-serif; text-align: center; white-space: pre-wrap; padding: 5px; text-shadow: 0px 0px 5px rgba(0,0,0,0.8); }
+.draggable-img { max-width: 120px; display: block; pointer-events: none; }
 
 /* أدوات التحكم الديناميكية */
+.buttons-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;}
+.add-btn { flex: 1; background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px dashed rgba(255, 215, 0, 0.5); padding: 10px; border-radius: 10px; font-family: 'Tajawal'; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center;}
 .tools-panel { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px; }
-.add-text-btn { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px dashed rgba(255, 215, 0, 0.5); padding: 10px; border-radius: 10px; font-family: 'Tajawal'; font-weight: bold; cursor: pointer; width: 100%; }
 .custom-input, .custom-select { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 10px; padding: 10px; font-family: inherit; box-sizing: border-box; outline: none; text-align: right;}
 .custom-select option { background: #333; color: white; }
 .delete-btn { background: rgba(255, 59, 48, 0.2); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.5); padding: 10px; border-radius: 10px; font-family: 'Tajawal'; font-weight: bold; cursor: pointer; width: 100%; }
 
 /* النوافذ والإشعارات */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(8px); }
-.modal-content { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; padding: 25px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: scale(0.8); opacity: 0; transition: 0.4s; position: relative; box-sizing: border-box; }
+.modal-content { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; padding: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: scale(0.8); opacity: 0; transition: 0.4s; position: relative; box-sizing: border-box; }
 .modal-content.show-modal { transform: scale(1); opacity: 1; }
-.close-modal { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.1); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+.close-modal { position: absolute; top: -10px; right: -10px; background: #ff3b30; border: 2px solid white; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10; }
 .submit-btn { background: white; color: black; border: none; padding: 12px 20px; border-radius: 15px; font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 10px;}
-#toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
-.toast { background: rgba(255,255,255,0.95); color: black; padding: 12px 25px; border-radius: 20px; font-family: 'Tajawal', sans-serif; font-weight: bold; font-size: 14px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); opacity: 0; transform: translateY(20px); transition: all 0.4s ease; text-align: center; }
+#toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 300px;}
+.toast { background: rgba(255,255,255,0.95); color: black; padding: 12px 20px; border-radius: 20px; font-family: 'Tajawal', sans-serif; font-weight: bold; font-size: 14px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); opacity: 0; transform: translateY(20px); transition: all 0.4s ease; text-align: center; }
 .toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
@@ -118,7 +124,7 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
           <button class="action-btn like-btn" id="likeBtn" onclick="toggleLike()">
             <span id="likeIcon">🤍</span> إعجاب 
           </button>
-          <button class="action-btn share-btn" onclick="shareImage()">
+          <button class="action-btn share-btn" onclick="shareImage('quoteImage')">
             📤 مشاركة 
           </button>
           <button class="action-btn download-btn" onclick="downloadImage('quoteImage')">
@@ -133,42 +139,59 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
   </div>
 
   <div id="favTab" class="tab-content">
-    <h3 style="color: #ffd700; margin-top: 0;">رسائلك المفضلة ❤️</h3>
+    <h3 style="color: #ffd700; margin-top: 0; text-align: center;">رسائلك المفضلة ❤️</h3>
+    <p style="font-size: 12px; text-align: center; color: #ccc; margin-bottom: 15px;">اضغط على أي صورة للتفاعل معها</p>
     <div class="favorites-grid" id="favoritesGrid"></div>
   </div>
 
   <div id="createTab" class="tab-content">
     <div class="creator-card">
       <h3 style="margin-top: 0; text-align: center;">صمم رسالتك بنفسك ✨</h3>
-      <p style="font-size: 12px; text-align: center; color: #ccc; margin-bottom: 15px;">بإمكانك التكبير بإصبعين ✌️ وسحب النص لأي مكان</p>
+      <p style="font-size: 12px; text-align: center; color: #ccc; margin-bottom: 15px;">بإمكانك التكبير بإصبعين ✌️ وسحب أي عنصر لمكانه المناسب</p>
       
       <div class="canvas-container" id="captureArea">
         <img src="images/template.jpg" id="templateBg" alt="خلفية">
       </div>
 
-      <button class="add-text-btn" onclick="addNewText()">➕ أضف نص جديد</button>
+      <div class="buttons-row">
+        <label class="add-btn">
+          🖼️ غير الخلفية
+          <input type="file" id="bgUploader" style="display:none" accept="image/*" onchange="changeBackground(event)">
+        </label>
+        <button class="add-btn" onclick="addNewText()">✍️ أضف نص</button>
+        <label class="add-btn">
+          ➕ أضف صورة
+          <input type="file" id="imgUploader" style="display:none" accept="image/*" onchange="addOverlayImage(event)">
+        </label>
+      </div>
 
       <div class="tools-panel" id="toolsPanel" style="display: none;">
-        <textarea id="activeTextInput" class="custom-input" placeholder="اكتب رسالتك..." oninput="updateActiveText()" rows="2"></textarea>
-        <div class="actions-row">
-          <select id="activeFont" class="custom-select" onchange="updateActiveText()">
-            <option value="Tajawal">خط تجوال</option>
-            <option value="Amiri">خط أميري</option>
-            <option value="Cairo">خط كايرو</option>
-            <option value="Reem Kufi">خط كوفي</option>
-          </select>
-          <select id="activeColor" class="custom-select" onchange="updateActiveText()">
-            <option value="#000000">لون أسود</option>
-            <option value="#FFFFFF">لون أبيض</option>
-            <option value="#8B4513">لون بني</option>
-            <option value="#2F4F4F">رمادي غامق</option>
-          </select>
+        <div id="textToolsRow" style="display: flex; flex-direction: column; gap: 10px;">
+          <textarea id="activeTextInput" class="custom-input" placeholder="اكتب رسالتك..." oninput="updateActiveElement()" rows="2"></textarea>
+          <div class="actions-row">
+            <select id="activeFont" class="custom-select" onchange="updateActiveElement()">
+              <option value="Tajawal">تجوال</option>
+              <option value="Amiri">أميري</option>
+              <option value="Cairo">كايرو</option>
+              <option value="Reem Kufi">كوفي</option>
+              <option value="Almarai">المراعي</option>
+              <option value="Lalezar">لاله زار</option>
+              <option value="Changa">تشانجا</option>
+            </select>
+            <select id="activeColor" class="custom-select" onchange="updateActiveElement()">
+              <option value="#FFFFFF">أبيض</option>
+              <option value="#000000">أسود</option>
+              <option value="#FFD700">ذهبي</option>
+              <option value="#8B4513">بني</option>
+              <option value="#2F4F4F">رمادي غامق</option>
+            </select>
+          </div>
         </div>
-        <button class="delete-btn" onclick="deleteActiveText()">🗑️ حذف هذا النص</button>
+        <button class="delete-btn" onclick="deleteActiveElement()">🗑️ حذف العنصر المحدد</button>
       </div>
 
       <button class="action-btn download-btn" style="width: 100%; margin-top: 10px;" onclick="exportCustomImage()">
-        ⬇️ حفظ التصميم
+        ⬇️ حفظ التصميم المكتمل
       </button>
     </div>
   </div>
@@ -183,16 +206,24 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
   </div>
 </div>
 
+<div class="modal-overlay" id="favViewModal">
+  <div class="modal-content" id="favViewContent" style="padding: 15px;">
+    <button class="close-modal" onclick="closeModal('favViewModal', 'favViewContent')">✖</button>
+    <img id="favViewImage" src="" style="width: 100%; max-height: 50vh; object-fit: contain; border-radius: 15px; margin-bottom: 15px;">
+    <div class="actions-row" style="margin-bottom: 10px;">
+        <button class="action-btn share-btn" onclick="shareImage('favViewImage')">📤 مشاركة</button>
+        <button class="action-btn download-btn" onclick="downloadImage('favViewImage')">⬇️ حفظ</button>
+    </div>
+    <button class="action-btn like-btn liked" onclick="removeFavoriteFromModal()" style="width: 100%;">❤️ إزالة من المفضلة</button>
+  </div>
+</div>
+
 <script>
 // ================= المتغيرات الأساسية =================
 const images = ["images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg", "images/6.jpg", "images/7.jpg"]; 
 const MAX_VIEWS = 3;
 const API_KEY = "3863ddcd-c4bc-4099-9148-d4344f98bdd2"; 
-
-// تسجيل PWA
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA Error:', err));
-}
+let currentFavOpenIndex = null; // تخزين اندكس الصورة المفتوحة بالمفضلة
 
 function showToast(message) {
   let container = document.getElementById("toast-container");
@@ -207,14 +238,40 @@ function initApp() {
   const today = new Date().toDateString();
   let savedDate = localStorage.getItem("appDate");
   
+  // تهيئة مصفوفة الصور العشوائية للمستخدم (لضمان عدم التكرار حتى يشاهدها كلها)
+  if (!localStorage.getItem("unseenQuotes")) {
+    generateShuffledQuotes();
+  }
+  
   if (savedDate !== today) {
     localStorage.setItem("appDate", today);
     localStorage.setItem("viewCount", "1");
-    localStorage.setItem("currentQuoteIndex", getRandomImage(-1).toString());
+    localStorage.setItem("currentQuoteIndex", getNextQuoteIndex().toString());
     updateStreak(today);
   } else {
     displayStreak();
   }
+}
+
+// خوارزمية ترتيب عشوائي (Fisher-Yates) لضمان عدم التكرار
+function generateShuffledQuotes() {
+  let all = Array.from({length: images.length}, (_, i) => i);
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [all[i], all[j]] = [all[j], all[i]];
+  }
+  localStorage.setItem("unseenQuotes", JSON.stringify(all));
+}
+
+function getNextQuoteIndex() {
+  let unseen = JSON.parse(localStorage.getItem("unseenQuotes")) || [];
+  if (unseen.length === 0) {
+    generateShuffledQuotes();
+    unseen = JSON.parse(localStorage.getItem("unseenQuotes"));
+  }
+  let nextIndex = unseen.pop();
+  localStorage.setItem("unseenQuotes", JSON.stringify(unseen));
+  return nextIndex;
 }
 
 function updateStreak(todayStr) {
@@ -225,12 +282,12 @@ function updateStreak(todayStr) {
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     if (lastVisit === yesterday.toDateString()) {
-      streak++; // يوم متتالي
+      streak++; 
     } else if (lastVisit !== todayStr) {
-      streak = 1; // كسر السلسلة
+      streak = 1; 
     }
   } else {
-    streak = 1; // أول مرة
+    streak = 1; 
   }
   
   localStorage.setItem("lastVisitDate", todayStr);
@@ -245,14 +302,6 @@ function displayStreak() {
     badge.style.display = "flex";
     document.getElementById("streakCount").innerText = streak;
   }
-}
-
-function getRandomImage(currentIndex) {
-  if (images.length === 0) return 0; 
-  let newIndex;
-  do { newIndex = Math.floor(Math.random() * images.length); } 
-  while (newIndex === currentIndex && images.length > 1);
-  return newIndex;
 }
 
 function showSplashScreen() {
@@ -272,7 +321,7 @@ function showSplashScreen() {
       splash.style.display = "none";
       document.getElementById("mainApp").style.display = "flex";
       updateQuoteUI(); 
-      loadFavorites(); // تحميل المفضلات
+      loadFavorites(); 
     }, 500);
   }, 2000);
 }
@@ -283,8 +332,7 @@ function loadNextQuote() {
   if (count < MAX_VIEWS) {
     count++;
     localStorage.setItem("viewCount", count.toString());
-    let currentIndex = parseInt(localStorage.getItem("currentQuoteIndex") || "0");
-    localStorage.setItem("currentQuoteIndex", getRandomImage(currentIndex).toString());
+    localStorage.setItem("currentQuoteIndex", getNextQuoteIndex().toString());
     document.getElementById("quoteImage").style.opacity = "0";
     setTimeout(updateQuoteUI, 400); 
   }
@@ -345,13 +393,13 @@ function closeModal(modalId, contentId) { const modal = document.getElementById(
 
 function downloadImage(imgId) { 
   const imgSrc = document.getElementById(imgId).src; 
-  const link = document.createElement('a'); link.href = imgSrc; link.download = 'رسالة_اليوم.jpg'; 
+  const link = document.createElement('a'); link.href = imgSrc; link.download = 'رسالة.jpg'; 
   document.body.appendChild(link); link.click(); document.body.removeChild(link); 
   showToast("بدأ تحميل الصورة 📥"); 
 }
 
-async function shareImage() {
-  const img = document.getElementById("quoteImage");
+async function shareImage(imgId) {
+  const img = document.getElementById(imgId);
   try {
     const response = await fetch(img.src);
     const blob = await response.blob();
@@ -378,7 +426,6 @@ function toggleLike() {
   } 
   localStorage.setItem("likedImages", JSON.stringify(likedImages)); 
   updateLikeDisplay(); 
-  loadFavorites();
 }
 
 function updateLikeDisplay() { 
@@ -390,6 +437,7 @@ function updateLikeDisplay() {
   else { likeBtn.classList.remove("liked"); likeIcon.innerText = "🤍"; } 
 }
 
+// ================= تحسينات معرض المفضلة =================
 function loadFavorites() {
   const grid = document.getElementById("favoritesGrid");
   grid.innerHTML = "";
@@ -405,8 +453,27 @@ function loadFavorites() {
     let img = document.createElement("img");
     img.src = images[parseInt(indexStr)];
     img.className = "fav-item";
+    img.onclick = () => openFavoriteModal(indexStr);
     grid.appendChild(img);
   });
+}
+
+function openFavoriteModal(indexStr) {
+  currentFavOpenIndex = indexStr;
+  document.getElementById("favViewImage").src = images[parseInt(indexStr)];
+  showModal('favViewModal', 'favViewContent');
+}
+
+function removeFavoriteFromModal() {
+  if (currentFavOpenIndex !== null) {
+    let likedImages = JSON.parse(localStorage.getItem("likedImages")) || {}; 
+    delete likedImages[currentFavOpenIndex];
+    localStorage.setItem("likedImages", JSON.stringify(likedImages));
+    showToast("تمت الإزالة من المفضلة 🗑️");
+    closeModal('favViewModal', 'favViewContent');
+    loadFavorites();
+    updateLikeDisplay(); // لتحديث زر الصفحة الرئيسية إذا كانت نفس الصورة
+  }
 }
 
 async function sendQuoteToEmail() { 
@@ -421,62 +488,106 @@ async function sendQuoteToEmail() {
   btn.innerText = "إرسال الرسالة 🚀"; btn.disabled = false; 
 }
 
-// ================= نظام "سوي رسالتك" المطور (نصوص حرة وزوم) =================
+// ================= نظام "سوي رسالتك" المطور الشامل =================
 const captureArea = document.getElementById("captureArea");
-let textCounter = 0;
+let elementCounter = 0;
 let activeElement = null;
 let initialDistance = null;
 let initialScale = 1;
 let initialX, initialY;
 
+// تغيير الخلفية
+function changeBackground(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("templateBg").src = e.target.result;
+    }
+    reader.readAsDataURL(file);
+  }
+}
+
+// إضافة صورة كعنصر فوق الخلفية
+function addOverlayImage(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      elementCounter++;
+      const newImg = document.createElement("img");
+      newImg.className = "draggable-item draggable-img";
+      newImg.id = "dynElem_" + elementCounter;
+      newImg.src = e.target.result;
+      newImg.dataset.scale = "1";
+      newImg.dataset.x = "0";
+      newImg.dataset.y = "0";
+      
+      newImg.style.top = "50%";
+      newImg.style.left = "50%";
+      newImg.style.transform = `translate(-50%, -50%) scale(1)`;
+      
+      captureArea.appendChild(newImg);
+      selectElement(newImg);
+    }
+    reader.readAsDataURL(file);
+  }
+}
+
 // إضافة نص جديد
 function addNewText() {
-  textCounter++;
+  elementCounter++;
   const newText = document.createElement("div");
-  newText.className = "draggable-text";
-  newText.id = "dynText_" + textCounter;
+  newText.className = "draggable-item draggable-text";
+  newText.id = "dynElem_" + elementCounter;
   newText.innerText = "اكتب هنا...";
   newText.dataset.scale = "1";
   newText.dataset.x = "0";
   newText.dataset.y = "0";
   
-  // توسيط مبدئي
   newText.style.top = "50%";
   newText.style.left = "50%";
   newText.style.transform = `translate(-50%, -50%) scale(1)`;
   
   captureArea.appendChild(newText);
-  selectText(newText);
+  selectElement(newText);
 }
 
-// تحديد النص للتحكم به
-function selectText(el) {
+// تحديد العنصر (نص أو صورة)
+function selectElement(el) {
   if (activeElement) activeElement.classList.remove("selected");
   activeElement = el;
   activeElement.classList.add("selected");
   
   document.getElementById("toolsPanel").style.display = "flex";
-  document.getElementById("activeTextInput").value = el.innerText;
+  
+  // إخفاء/إظهار أدوات النص إذا كان العنصر صورة أو نص
+  if (el.classList.contains("draggable-text")) {
+    document.getElementById("textToolsRow").style.display = "flex";
+    document.getElementById("activeTextInput").value = el.innerText;
+  } else {
+    document.getElementById("textToolsRow").style.display = "none";
+  }
 }
 
 // إلغاء التحديد عند الضغط على الخلفية
 captureArea.addEventListener('click', (e) => {
-  if (e.target.id === 'templateBg') {
+  if (e.target.id === 'templateBg' || e.target.id === 'captureArea') {
     if (activeElement) activeElement.classList.remove("selected");
     activeElement = null;
     document.getElementById("toolsPanel").style.display = "none";
   }
 });
 
-// تحديث النص الفعال من لوحة التحكم
-function updateActiveText() {
-  if (!activeElement) return;
+// تحديث العنصر الفعال
+function updateActiveElement() {
+  if (!activeElement || !activeElement.classList.contains("draggable-text")) return;
   activeElement.innerText = document.getElementById("activeTextInput").value;
   activeElement.style.fontFamily = document.getElementById("activeFont").value;
   activeElement.style.color = document.getElementById("activeColor").value;
 }
 
-function deleteActiveText() {
+function deleteActiveElement() {
   if (activeElement) {
     activeElement.remove();
     activeElement = null;
@@ -484,7 +595,7 @@ function deleteActiveText() {
   }
 }
 
-// إدارة السحب والـ Pinch To Zoom
+// إدارة السحب والزوم لجميع العناصر
 captureArea.addEventListener("touchstart", dragStart, {passive: false});
 captureArea.addEventListener("touchend", dragEnd, false);
 captureArea.addEventListener("touchmove", drag, {passive: false});
@@ -494,8 +605,8 @@ captureArea.addEventListener("mousemove", drag, false);
 captureArea.addEventListener("mouseleave", dragEnd, false);
 
 function dragStart(e) { 
-  if (e.target.classList.contains('draggable-text')) { 
-    selectText(e.target);
+  if (e.target.classList.contains('draggable-item')) { 
+    selectElement(e.target);
     if (e.touches && e.touches.length === 2) {
       initialDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
       initialScale = parseFloat(activeElement.dataset.scale) || 1;
@@ -512,7 +623,6 @@ function drag(e) {
   if (activeElement && (e.type.includes("mouse") ? e.buttons === 1 : true)) {
     e.preventDefault();
     if (e.touches && e.touches.length === 2 && initialDistance) {
-      // Zoom (Scale) بإصبعين
       let currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
       let scale = initialScale * (currentDistance / initialDistance);
       activeElement.dataset.scale = scale;
@@ -520,7 +630,6 @@ function drag(e) {
       let cy = activeElement.dataset.y || 0;
       activeElement.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px)) scale(${scale})`;
     } else if (!e.touches || e.touches.length === 1) {
-      // Move بإصبع واحد
       let currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX; 
       let currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY; 
       activeElement.dataset.x = currentX;
@@ -537,7 +646,6 @@ function exportCustomImage() {
   const originalText = btn.innerHTML;
   btn.innerHTML = "جاري التجهيز ⏳..."; btn.disabled = true;
   
-  // إخفاء حدود التحديد قبل التصوير
   if(activeElement) activeElement.classList.remove("selected");
 
   html2canvas(captureArea, { scale: 3, useCORS: true }).then(canvas => {
@@ -553,7 +661,6 @@ function exportCustomImage() {
   });
 }
 
-// إضافة أول نص تلقائياً
 window.addEventListener('DOMContentLoaded', addNewText);
 </script>
 </body>
