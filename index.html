@@ -60,13 +60,14 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
 /* قسم سوي رسالتك المطور (عناصر حرة) */
 .creator-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); padding: 15px; border-radius: 25px; width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
 .canvas-container { position: relative; width: 100%; border-radius: 15px; overflow: hidden; touch-action: none; background: #000; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; min-height: 300px; }
-.canvas-container > img#templateBg { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
+/* تحديث لإظهار الخلفية بالكامل */
+.canvas-container > img#templateBg { width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; pointer-events: none; position: absolute; top: 0; left: 0; z-index: 0; }
 
 /* العناصر القابلة للسحب (نصوص وصور) */
-.draggable-item { position: absolute; transform-origin: center center; cursor: move; user-select: none; z-index: 1; }
+.draggable-item { position: absolute; transform-origin: center center; cursor: move; user-select: none; z-index: 1; pointer-events: auto; }
 .draggable-item.selected { border: 2px dashed #ffd700; background: rgba(255,255,255,0.2); border-radius: 5px; }
 .draggable-text { color: #fff; font-size: 24px; font-weight: bold; font-family: 'Tajawal', sans-serif; text-align: center; white-space: pre-wrap; padding: 5px; text-shadow: 0px 0px 5px rgba(0,0,0,0.8); }
-.draggable-img { max-width: 120px; display: block; pointer-events: none; }
+.draggable-img { max-width: 100%; display: block; }
 
 /* أدوات التحكم الديناميكية */
 .buttons-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;}
@@ -74,6 +75,9 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
 .tools-panel { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px; }
 .custom-input, .custom-select { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 10px; padding: 10px; font-family: inherit; box-sizing: border-box; outline: none; text-align: right;}
 .custom-select option { background: #333; color: white; }
+.slider-container { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; }
+.slider-container span { font-size: 12px; white-space: nowrap; color: #ccc; }
+input[type=range] { flex: 1; accent-color: #ffd700; }
 .delete-btn { background: rgba(255, 59, 48, 0.2); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.5); padding: 10px; border-radius: 10px; font-family: 'Tajawal'; font-weight: bold; cursor: pointer; width: 100%; }
 
 /* النوافذ والإشعارات */
@@ -147,7 +151,7 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
   <div id="createTab" class="tab-content">
     <div class="creator-card">
       <h3 style="margin-top: 0; text-align: center;">صمم رسالتك بنفسك ✨</h3>
-      <p style="font-size: 12px; text-align: center; color: #ccc; margin-bottom: 15px;">بإمكانك التكبير بإصبعين ✌️ وسحب أي عنصر لمكانه المناسب</p>
+      <p style="font-size: 12px; text-align: center; color: #ccc; margin-bottom: 15px;">بإمكانك التكبير بإصبعين ✌️ أو باستخدام شريط التحكم وسحب العنصر لمكانه</p>
       
       <div class="canvas-container" id="captureArea">
         <img src="images/template.jpg" id="templateBg" alt="خلفية">
@@ -186,6 +190,10 @@ body { margin: 0; font-family: 'Tajawal', sans-serif; overflow-x: hidden; overfl
               <option value="#2F4F4F">رمادي غامق</option>
             </select>
           </div>
+        </div>
+        <div class="slider-container">
+          <span>الحجم:</span>
+          <input type="range" id="activeElementScale" min="0.1" max="5" step="0.01" value="1" oninput="updateActiveElementScale()">
         </div>
         <button class="delete-btn" onclick="deleteActiveElement()">🗑️ حذف العنصر المحدد</button>
       </div>
@@ -508,7 +516,7 @@ function changeBackground(event) {
   }
 }
 
-// إضافة صورة كعنصر فوق الخلفية
+// إضافة صورة كعنصر فوق الخلفية وتفعيل التحكم بها
 function addOverlayImage(event) {
   const file = event.target.files[0];
   if (file) {
@@ -516,9 +524,11 @@ function addOverlayImage(event) {
     reader.onload = function(e) {
       elementCounter++;
       const newImg = document.createElement("img");
+      // تفعيل كلاس draggable-item للتحكم
       newImg.className = "draggable-item draggable-img";
       newImg.id = "dynElem_" + elementCounter;
       newImg.src = e.target.result;
+      // تهيئة البيانات للتحكم
       newImg.dataset.scale = "1";
       newImg.dataset.x = "0";
       newImg.dataset.y = "0";
@@ -553,7 +563,7 @@ function addNewText() {
   selectElement(newText);
 }
 
-// تحديد العنصر (نص أو صورة)
+// تحديد العنصر (نص أو صورة) لتحديث لوحة الأدوات
 function selectElement(el) {
   if (activeElement) activeElement.classList.remove("selected");
   activeElement = el;
@@ -561,7 +571,10 @@ function selectElement(el) {
   
   document.getElementById("toolsPanel").style.display = "flex";
   
-  // إخفاء/إظهار أدوات النص إذا كان العنصر صورة أو نص
+  // تحديث شريط التمرير (Slider) حسب مقياس العنصر الحالي
+  document.getElementById("activeElementScale").value = activeElement.dataset.scale || 1;
+
+  // إخفاء/إظهار أدوات النص حسب نوع العنصر
   if (el.classList.contains("draggable-text")) {
     document.getElementById("textToolsRow").style.display = "flex";
     document.getElementById("activeTextInput").value = el.innerText;
@@ -570,7 +583,7 @@ function selectElement(el) {
   }
 }
 
-// إلغاء التحديد عند الضغط على الخلفية
+// إلغاء التحديد عند الضغط على الخلفية أو منطقة فارغة
 captureArea.addEventListener('click', (e) => {
   if (e.target.id === 'templateBg' || e.target.id === 'captureArea') {
     if (activeElement) activeElement.classList.remove("selected");
@@ -579,12 +592,22 @@ captureArea.addEventListener('click', (e) => {
   }
 });
 
-// تحديث العنصر الفعال
+// تحديث العنصر الفعال (للنصوص)
 function updateActiveElement() {
   if (!activeElement || !activeElement.classList.contains("draggable-text")) return;
   activeElement.innerText = document.getElementById("activeTextInput").value;
   activeElement.style.fontFamily = document.getElementById("activeFont").value;
   activeElement.style.color = document.getElementById("activeColor").value;
+}
+
+// تحديث حجم العنصر من شريط التمرير (Slider)
+function updateActiveElementScale() {
+    if (!activeElement) return;
+    let scale = parseFloat(document.getElementById("activeElementScale").value);
+    activeElement.dataset.scale = scale;
+    let cx = activeElement.dataset.x || 0;
+    let cy = activeElement.dataset.y || 0;
+    activeElement.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px)) scale(${scale})`;
 }
 
 function deleteActiveElement() {
@@ -595,7 +618,7 @@ function deleteActiveElement() {
   }
 }
 
-// إدارة السحب والزوم لجميع العناصر
+// إدارة السحب والزوم لجميع العناصر (تدعم الهاتف والكمبيوتر)
 captureArea.addEventListener("touchstart", dragStart, {passive: false});
 captureArea.addEventListener("touchend", dragEnd, false);
 captureArea.addEventListener("touchmove", drag, {passive: false});
@@ -623,13 +646,17 @@ function drag(e) {
   if (activeElement && (e.type.includes("mouse") ? e.buttons === 1 : true)) {
     e.preventDefault();
     if (e.touches && e.touches.length === 2 && initialDistance) {
+      // الزوم بالأصابع (Pinch)
       let currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
       let scale = initialScale * (currentDistance / initialDistance);
       activeElement.dataset.scale = scale;
+      // تحديث قيمة شريط التمرير ليتزامن مع الزوم بالأصابع
+      document.getElementById("activeElementScale").value = scale;
       let cx = activeElement.dataset.x || 0;
       let cy = activeElement.dataset.y || 0;
       activeElement.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px)) scale(${scale})`;
     } else if (!e.touches || e.touches.length === 1) {
+      // سحب عنصر واحد
       let currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX; 
       let currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY; 
       activeElement.dataset.x = currentX;
@@ -640,7 +667,7 @@ function drag(e) {
   }
 }
 
-// تحميل تصميم المستخدم
+// تحميل تصميم المستخدم كصورة مدمجة
 function exportCustomImage() {
   const btn = document.querySelector('.creator-card .download-btn');
   const originalText = btn.innerHTML;
@@ -661,6 +688,7 @@ function exportCustomImage() {
   });
 }
 
+// تهيئة أول نص عند تحميل الصفحة
 window.addEventListener('DOMContentLoaded', addNewText);
 </script>
 </body>
