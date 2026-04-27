@@ -1,7 +1,9 @@
 const CACHE_NAME = 'quote-app-v1';
 const urlsToCache = [
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './images/icon.png',
+  './images/template.jpg'
 ];
 
 self.addEventListener('install', event => {
